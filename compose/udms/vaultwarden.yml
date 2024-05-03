@@ -22,9 +22,9 @@ services:
     - "traefik.http.routers.vaultwarden-rtr.rule=Host(`vault.$DOMAINNAME_HS`)"
     - "traefik.http.routers.vaultwarden-rtr.tls=true"
     ## Middlewares
-    - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-no-auth@file" # For No Authentication
+    # - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-no-auth@file" # For No Authentication
     # - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
-    # - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-oauth@file" # For Google OAuth
+    - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-oauth@file" # For Google OAuth
     # - "traefik.http.routers.vaultwarden-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
     ## HTTP Services
     - "traefik.http.routers.vaultwarden-rtr.service=vaultwarden-svc"

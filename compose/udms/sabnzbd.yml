@@ -30,8 +30,8 @@ services:
       # Middlewares
       # - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-no-auth@file" # For No Authentication
       # - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
-      # - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-oauth@file" # For Google OAuth
-      - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+      - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-oauth@file" # For Google OAuth
+      # - "traefik.http.routers.sabnzbd-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
       # HTTP Services
       - "traefik.http.routers.sabnzbd-rtr.service=sabnzbd-svc"
       - "traefik.http.services.sabnzbd-svc.loadbalancer.server.port=8080"

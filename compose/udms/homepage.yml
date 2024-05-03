@@ -24,7 +24,10 @@ services:
       - "traefik.http.routers.homepage-rtr.entrypoints=websecure"
       - "traefik.http.routers.homepage-rtr.rule=Host(`$DOMAINNAME_HS`,`www.$DOMAINNAME_HS`)" # Both domain.com and www.domain.com
       # Middlewares
-      - "traefik.http.routers.service-rtr.middlewares=chain-authelia@file"
+      # - "traefik.http.routers.homepage-rtr.middlewares=chain-no-auth@file" # For No Authentication
+      # - "traefik.http.routers.homepage-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
+      - "traefik.http.routers.homepage-rtr.middlewares=chain-oauth@file" # For Google OAuth
+      # - "traefik.http.routers.homepage-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
       # HTTP Services
       - "traefik.http.routers.homepage-rtr.service=homepage-svc"
       - "traefik.http.services.homepage-svc.loadbalancer.server.port=3000"

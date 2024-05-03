@@ -32,8 +32,8 @@ services:
       ## Middlewares
       # - "traefik.http.routers.readarr-rtr.middlewares=chain-no-auth@file" # For No Authentication
       # - "traefik.http.routers.readarr-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
-      # - "traefik.http.routers.readarr-rtr.middlewares=chain-oauth@file" # For Google OAuth
-      - "traefik.http.routers.readarr-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+      - "traefik.http.routers.readarr-rtr.middlewares=chain-oauth@file" # For Google OAuth
+      # - "traefik.http.routers.readarr-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
       ## HTTP Services
       - "traefik.http.routers.readarr-rtr.service=readarr-svc"
       - "traefik.http.services.readarr-svc.loadbalancer.server.port=8787"

@@ -25,7 +25,10 @@ services:
       - "traefik.http.routers.portainer-rtr.entrypoints=websecure"
       - "traefik.http.routers.portainer-rtr.rule=Host(`portainer.$DOMAINNAME_HS`)"
       # Middlewares
-      - "traefik.http.routers.portainer-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+      # - "traefik.http.routers.portainer-rtr.middlewares=chain-no-auth@file" # For No Authentication
+      # - "traefik.http.routers.portainer-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
+      - "traefik.http.routers.portainer-rtr.middlewares=chain-oauth@file" # For Google OAuth
+      # - "traefik.http.routers.portainer-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
       # HTTP Services
       - "traefik.http.routers.portainer-rtr.service=portainer-svc"
       - "traefik.http.services.portainer-svc.loadbalancer.server.port=9000"
