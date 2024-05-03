@@ -1,0 +1,39 @@
+services: 
+  # Readarr - Books management
+  # Set url_base in readarr settings if using PathPrefix
+  readarr:
+    image: hotio/readarr:nightly
+    container_name: readarr
+    security_opt:
+      - no-new-privileges:true
+    restart: "no"
+    # profiles: ["media","arrs", "all"]
+    networks:
+      t2_proxy:
+        ipv4_address: 192.168.90.32
+      socket_proxy:
+    ports:
+      - "8787:8787"
+    volumes:
+      - $DOCKERDIR/appdata/readarr:/config
+      - $DATADIR:/data
+      - "/etc/localtime:/etc/localtime:ro"
+    environment:
+      TZ: $TZ
+      PUID: $PUID
+      PGID: $PGID
+      UMASK: 002
+      #ARGS: ""
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers Auth
+      - "traefik.http.routers.readarr-rtr.entrypoints=websecure"
+      - "traefik.http.routers.readarr-rtr.rule=Host(`readarr.$DOMAINNAME_HS`)"
+      ## Middlewares
+      # - "traefik.http.routers.readarr-rtr.middlewares=chain-no-auth@file" # For No Authentication
+      # - "traefik.http.routers.readarr-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
+      # - "traefik.http.routers.readarr-rtr.middlewares=chain-oauth@file" # For Google OAuth
+      - "traefik.http.routers.readarr-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+      ## HTTP Services
+      - "traefik.http.routers.readarr-rtr.service=readarr-svc"
+      - "traefik.http.services.readarr-svc.loadbalancer.server.port=8787"

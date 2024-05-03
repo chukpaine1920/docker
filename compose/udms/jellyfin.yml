@@ -1,0 +1,40 @@
+services:
+  # Jellyfin - Media Server
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    networks:
+      t2_proxy:
+        ipv4_address: 192.168.90.36
+      socket_proxy:
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+    # profiles: ["media", "all"]
+    user: $PUID:$PGID
+    devices:
+      - /dev/dri:/dev/dri # for harware transcoding
+    ports:
+      - "8096:8096"
+      # - "8920:8920" # Emby also uses same port if running both
+    environment:
+      UMASK_SET: 022
+      TZ: $TZ
+    volumes:
+      - $DOCKERDIR/appdata/jellyfin:/config
+      - $DATADIR:/data/media
+      - /dev/shm:/data/transcode # Offload transcoding to RAM if you have enough RAM
+    labels:
+    - "traefik.enable=true"
+    ## HTTP Routers
+    - "traefik.http.routers.jellyfin-rtr.entrypoints=websecure"
+    - "traefik.http.routers.jellyfin-rtr.rule=Host(`jellyfin.$DOMAINNAME_HS`)"
+    - "traefik.http.routers.jellyfin-rtr.tls=true"
+    ## Middlewares
+    - "traefik.http.routers.jellyfin-rtr.middlewares=chain-no-auth@file" # For No Authentication
+    # - "traefik.http.routers.jellyfin-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
+    # - "traefik.http.routers.jellyfin-rtr.middlewares=chain-oauth@file" # For Google OAuth
+    # - "traefik.http.routers.jellyfin-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+    ## HTTP Services
+    - "traefik.http.routers.jellyfin-rtr.service=jellyfin-svc"
+    - "traefik.http.services.jellyfin-svc.loadbalancer.server.port=8096"
