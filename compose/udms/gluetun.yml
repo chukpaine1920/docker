@@ -7,7 +7,7 @@ services:
     container_name: gluetun
     security_opt:
       - no-new-privileges:true
-    restart: unless-stopped
+    restart: unless-stopp
     # profiles: ["core", "all"]
     networks:
       t2_proxy:
