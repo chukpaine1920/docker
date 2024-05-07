@@ -16,6 +16,7 @@ services:
     volumes:
       - $DOCKERDIR/appdata/radarr:/config
       - $DATADIR:/data
+      # - $DOWNLOADSDIR:/data/downloads
       - "/etc/localtime:/etc/localtime:ro"
     environment:
       TZ: $TZ
@@ -24,19 +25,17 @@ services:
     labels:
       - "traefik.enable=true"
       # HTTP Routers Auth Bypass
-      # - "traefik.http.routers.radarr-rtr-bypass.entrypoints=websecure"
-      # - "traefik.http.routers.radarr-rtr-bypass.rule=Host(`radarr.$DOMAINNAME_HS`) && (Header(`X-Api-Key`, `$RADARR_API_KEY`) || Query(`apikey`, `$RADARR_API_KEY`))"
-      # - "traefik.http.routers.radarr-rtr-bypass.rule=Host(`radarr.$DOMAINNAME_HS`) && Header(`traefik-auth-bypass-key`, `$TRAEFIK_AUTH_BYPASS_KEY`)" # Bypass Auth for LunaSea on iOS
-      # - "traefik.http.routers.radarr-rtr-bypass.priority=100"
+      - "traefik.http.routers.radarr-rtr-bypass.entrypoints=websecure"
+      # - "traefik.http.routers.radarr-rtr-bypass.rule=Host(`radarr.$DOMAINNAME_HS`) && (Headers(`X-Api-Key`, `$radarr_API_KEY`) || Query(`apikey`, `$radarr_API_KEY`))"
+      - "traefik.http.routers.radarr-rtr-bypass.rule=Host(`radarr.$DOMAINNAME_HS`) && Headers(`traefik-auth-bypass-key`, `$TRAEFIK_AUTH_BYPASS_KEY`)" # Bypass Auth for LunaSea on iOS
+      - "traefik.http.routers.radarr-rtr-bypass.priority=100"
       # HTTP Routers Auth
       - "traefik.http.routers.radarr-rtr.entrypoints=websecure"
       - "traefik.http.routers.radarr-rtr.rule=Host(`radarr.$DOMAINNAME_HS`)"
       - "traefik.http.routers.radarr-rtr.priority=99"
       # Middlewares
-      # - "traefik.http.routers.radarr-rtr.middlewares=chain-no-auth@file" # For No Authentication
-      # - "traefik.http.routers.radarr-rtr.middlewares=chain-basic-auth@file" # For Basic HTTP Authentication
-      - "traefik.http.routers.radarr-rtr.middlewares=chain-oauth@file" # For Google OAuth
-      # - "traefik.http.routers.radarr-rtr.middlewares=chain-authelia@file" # For Authelia Authentication
+      - "traefik.http.routers.radarr-rtr-bypass.middlewares=chain-no-auth@file"
+      - "traefik.http.routers.radarr-rtr.middlewares=chain-oauth@file"
       # HTTP Services
       - "traefik.http.routers.radarr-rtr.service=radarr-svc"
       - "traefik.http.routers.radarr-rtr-bypass.service=radarr-svc"
